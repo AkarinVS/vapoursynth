@@ -198,6 +198,14 @@ VS_API(const char *) vsscript_getError(VSScript *handle) VS_NOEXCEPT {
         return "Invalid handle (NULL)";
 }
 
+VS_API(int) vsscript_getExitCode(VSScript *handle) VS_NOEXCEPT {
+    std::lock_guard<std::mutex> lock(vsscriptlock);
+    if (handle)
+        return handle->exitCode;
+    else
+        return 0;
+}
+
 VS_API(const VSAPI *) vsscript_getVSApi2(int version) VS_NOEXCEPT {
     std::lock_guard<std::mutex> lock(vsscriptlock);
     return vpy4_getVSAPI(version);
@@ -301,6 +309,7 @@ static VSSCRIPTAPI vsscript_api = {
     &evaluateBuffer,
     &evaluateFile,
     &vsscript_getError,
+    &vsscript_getExitCode,
     &getOutputNode,
     &getOutputAlphaNode,
     &getOptions,

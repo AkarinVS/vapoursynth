@@ -24,7 +24,7 @@
 #include "VapourSynth4.h"
 
 #define VSSCRIPT_API_MAJOR 4
-#define VSSCRIPT_API_MINOR 0
+#define VSSCRIPT_API_MINOR 1
 #define VSSCRIPT_API_VERSION VS_MAKE_VERSION(VSSCRIPT_API_MAJOR, VSSCRIPT_API_MINOR)
 
 typedef struct VSScript VSScript;
@@ -71,6 +71,9 @@ struct VSSCRIPTAPI {
 
     /* Returns NULL on success, otherwise an error message */
     const char *(VS_CC *getError)(VSScript *handle) VS_NOEXCEPT;
+
+    /* Returns 0 on success, otherwise the exit code */
+    int (VS_CC *getExitCode)(VSScript *handle) VS_NOEXCEPT;
 
     /*
     * The returned nodes must be freed using freeNode() before calling freeScript() since they may depend on data in the VSScript
