@@ -68,5 +68,15 @@ jobs:
         popd
         popd
 
+    - name: Build release
+      run: |
+        7z a -t7z -mx=3 release.7z .
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: unpack-me-${{matrix.arch}}
+        path: |
+          release.7z
+
     - name: Run test
       run: python -m unittest discover -s test -p "*test.py"
