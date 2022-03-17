@@ -252,6 +252,7 @@ static void outputFrame(const VSFrame *frame, VSPipeOutputData *data) {
                     if (data->errorMessage.empty())
                         data->errorMessage = "Error: fwrite() call failed when writing frame: " + std::to_string(data->outputFrames) + ", plane: " + std::to_string(p) +
                         ", errno: " + std::to_string(errno);
+                    fprintf(stderr, "ERR: %s\n", data->errorMessage.c_str());
                     data->totalFrames = data->requestedFrames;
                     data->outputError = true;
                     break;
@@ -283,6 +284,7 @@ static void outputFrame(const VSFrame *frame, VSPipeOutputData *data) {
             if (fwrite(data->buffer.data(), 1, toOutput, data->outFile) != toOutput) {
                 if (data->errorMessage.empty())
                     data->errorMessage = "Error: fwrite() call failed when writing frame: " + std::to_string(data->outputFrames) + ", errno: " + std::to_string(errno);
+                fprintf(stderr, "ERR: %s\n", data->errorMessage.c_str());
                 data->totalFrames = data->requestedFrames;
                 data->outputError = true;
             }
@@ -348,6 +350,7 @@ static void VS_CC frameDoneCallback(void *userData, const VSFrame *f, int n, VSN
                     if (fwrite("FRAME\n", 1, 6, data->outFile) != 6) {
                         if (data->errorMessage.empty())
                             data->errorMessage = "Error: fwrite() call failed when writing header, errno: " + std::to_string(errno);
+                        fprintf(stderr, "ERR: %s\n", data->errorMessage.c_str());
                         data->totalFrames = data->requestedFrames;
                         data->outputError = true;
                     }
@@ -365,6 +368,7 @@ static void VS_CC frameDoneCallback(void *userData, const VSFrame *f, int n, VSN
                     if (fprintf(data->timecodesFile, "%s\n", stream.str().c_str()) < 0) {
                         if (data->errorMessage.empty())
                             data->errorMessage = "Error: failed to write timecode for frame " + std::to_string(data->outputFrames) + ". errno: " + std::to_string(errno);
+                        fprintf(stderr, "ERR: %s\n", data->errorMessage.c_str());
                         data->totalFrames = data->requestedFrames;
                         data->outputError = true;
                     } else {
